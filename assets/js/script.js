@@ -82,13 +82,13 @@ timeBlocks.forEach( function(currentHour) {
 
     // adding time area
     var time = $("<div>")
-        .attr({"class":"hour col-md-3"})
+        .attr({"class":"hour col-md-1 text-right pt-2 pr-2"})
         .text(`${currentHour.hour}${currentHour.meridiem}`)
     row.append(time)
 
     // adding text area
     var text = $("<div>")
-        .attr({"class": "description col-md-7"})
+        .attr({"class": "description col-md-10"})
     
     var textArea = $("<textarea>").attr({"id": currentHour.id})
     text.append(textArea)
@@ -104,7 +104,8 @@ timeBlocks.forEach( function(currentHour) {
 
     // adding save button
     var saveButton = $("<button>").attr({"class": "saveBtn col-md-1"})
-    var iEl = $("<i></i>")
+    // adding button icon from fontawesome
+    var iEl = $('<i class="fas fa-save"></i>')
     saveButton.append(iEl)
     row.append(saveButton)
 
