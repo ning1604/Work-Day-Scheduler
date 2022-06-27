@@ -5,66 +5,57 @@ $("#currentDay").text(today.format("dddd, MMMM Do"));
 // variable to store timeblocks
 var timeBlocks = [
     {
-        id: "1",
+        id: "0",
         time: "09",
-        hour: "9",
-        meridiem: "AM",
+        hour: "9 AM",
+        text: ""
+    },
+    {
+        id: "1",
+        time: "10",
+        hour: "10 AM",
         text: ""
     },
     {
         id: "2",
-        time: "10",
-        hour: "10",
-        meridiem: "AM",
+        time: "11",
+        hour: "11 AM",
         text: ""
     },
     {
         id: "3",
-        time: "11",
-        hour: "11",
-        meridiem: "AM",
+        time: "12",
+        hour: "12 PM",
         text: ""
     },
     {
         id: "4",
-        time: "12",
-        hour: "12",
-        meridiem: "PM",
+        time: "13",
+        hour: "1 PM",
         text: ""
     },
     {
         id: "5",
-        time: "13",
-        hour: "1",
-        meridiem: "PM",
+        time: "14",
+        hour: "2 PM",
         text: ""
     },
     {
         id: "6",
-        time: "14",
-        hour: "2",
-        meridiem: "PM",
+        time: "15",
+        hour: "3 PM",
         text: ""
     },
     {
         id: "7",
-        time: "15",
-        hour: "3",
-        meridiem: "PM",
+        time: "16",
+        hour: "4 PM",
         text: ""
     },
     {
         id: "8",
-        time: "16",
-        hour: "4",
-        meridiem: "PM",
-        text: ""
-    },
-    {
-        id: "9",
         time: "17",
-        hour: "5",
-        meridiem: "PM",
+        hour: "5 PM",
         text: ""
     },
 ]
@@ -72,6 +63,21 @@ var timeBlocks = [
 // saves text data to local storage
 function saveTextData() {
     localStorage.setItem("timeBlocks", JSON.stringify(timeBlocks));
+}
+// updating text data
+function updateTextData() {
+    timeBlocks.forEach(function (currentHour) {
+        $(`#${currentHour.id}`).val(currentHour.text);
+    })
+}
+// displays the text
+function displayTextData() {
+    var storedTextData = JSON.parse(localStorage.getItem("timeBlocks"))
+    if (storedTextData) {
+        timeBlocks = storedTextData
+    }
+    saveTextData()
+    updateTextData()
 }
 
 // displays timeblocks
@@ -83,16 +89,15 @@ timeBlocks.forEach( function(currentHour) {
     // adding time area
     var time = $("<div>")
         .attr({"class":"hour col-md-1 text-right pt-2 pr-2"})
-        .text(`${currentHour.hour}${currentHour.meridiem}`)
+        .text(`${currentHour.hour}`)
     row.append(time)
 
     // adding text area
-    var text = $("<div>")
-        .attr({"class": "description col-md-10"})
-    
+    var text = $("<div>").attr({"class": "description col-md-10"})
     var textArea = $("<textarea>").attr({"id": currentHour.id})
     text.append(textArea)
     row.append(text)
+    
     // setting color of timeblock (indication of past, present, and future)
     if (currentHour.time < moment().format("HH")) {
         textArea.attr({"class": "past"})
@@ -109,4 +114,17 @@ timeBlocks.forEach( function(currentHour) {
     saveButton.append(iEl)
     row.append(saveButton)
 
+})
+
+displayTextData()
+
+// clicking save button to save data
+$(".saveBtn").on("click", function(event) {
+    event.preventDefault();
+    // returns value of id attribute which is used as the index
+    var savedDataIndex = $(this).siblings(".description").children(".future").attr("id")
+    // replacing/updating text to the row that was "clicked" (only with class name "future")
+    timeBlocks[savedDataIndex].text = $(this).siblings(".description").children(".future").val()
+    saveTextData()
+    updateTextData()
 })
